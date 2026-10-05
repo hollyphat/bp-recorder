@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BP Recorder
 
-## Getting Started
+Simple blood pressure tracker. Google login, log systolic/diastolic/pulse readings, view history and trend charts over 7/15/30 days or a custom range.
 
-First, run the development server:
+## Setup
+
+### 1. Create a Supabase project
+
+1. Go to [supabase.com](https://supabase.com) and create a free project.
+2. In **SQL Editor**, run the contents of [`supabase/schema.sql`](supabase/schema.sql) to create the `readings` table and its row-level security policies.
+3. In **Authentication > Sign In / Providers**, enable **Google**.
+   - You'll need a Google OAuth Client ID/Secret from the [Google Cloud Console](https://console.cloud.google.com/apis/credentials) (OAuth consent screen + "Web application" credentials).
+   - Set the authorized redirect URI to the callback URL Supabase shows you (looks like `https://<project-ref>.supabase.co/auth/v1/callback`).
+4. In **Authentication > URL Configuration**, add your app's URL (e.g. `http://localhost:3000` for dev, and your deployed URL later) to **Site URL** and **Redirect URLs** (`.../auth/callback`).
+5. Copy your **Project URL** and **anon public key** from **Project Settings > API**.
+
+### 2. Configure environment variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+### 3. Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploying (so it's usable from anywhere)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Push this repo to GitHub and import it into [Vercel](https://vercel.com) (free tier). Add the same two environment variables in the Vercel project settings, then add your production URL to Supabase's Site URL / Redirect URLs.
