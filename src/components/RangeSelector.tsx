@@ -47,14 +47,14 @@ export default function RangeSelector({
             type="date"
             value={customStart}
             onChange={(e) => onCustomStartChange(e.target.value)}
-            className="rounded-md border border-gray-300 px-2 py-1.5 text-xs"
+            className="rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-900"
           />
           <span className="text-xs text-gray-400">to</span>
           <input
             type="date"
             value={customEnd}
             onChange={(e) => onCustomEndChange(e.target.value)}
-            className="rounded-md border border-gray-300 px-2 py-1.5 text-xs"
+            className="rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-900"
           />
         </div>
       )}

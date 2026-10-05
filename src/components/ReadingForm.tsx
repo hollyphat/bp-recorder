@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { Reading } from "@/lib/readings";
 
 export default function ReadingForm({
   userId,
   onSaved,
 }: {
   userId: string;
-  onSaved: () => void;
+  onSaved: (reading: Reading) => void;
 }) {
   const [systolic, setSystolic] = useState("");
   const [diastolic, setDiastolic] = useState("");
@@ -39,22 +40,26 @@ export default function ReadingForm({
 
     setSaving(true);
     const supabase = createClient();
-    const { error: insertError } = await supabase.from("readings").insert({
-      user_id: userId,
-      systolic: sys,
-      diastolic: dia,
-      pulse: pul,
-      note: note || null,
-    });
+    const { data, error: insertError } = await supabase
+      .from("readings")
+      .insert({
+        user_id: userId,
+        systolic: sys,
+        diastolic: dia,
+        pulse: pul,
+        note: note || null,
+      })
+      .select()
+      .single();
     setSaving(false);
 
-    if (insertError) {
-      setError(insertError.message);
+    if (insertError || !data) {
+      setError(insertError?.message ?? "Could not save reading.");
       return;
     }
 
     reset();
-    onSaved();
+    onSaved(data as Reading);
   };
 
   return (
@@ -75,7 +80,7 @@ export default function ReadingForm({
             value={systolic}
             onChange={(e) => setSystolic(e.target.value)}
             placeholder="120"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
           />
         </div>
         <div>
@@ -89,7 +94,7 @@ export default function ReadingForm({
             value={diastolic}
             onChange={(e) => setDiastolic(e.target.value)}
             placeholder="80"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
           />
         </div>
         <div>
@@ -102,7 +107,7 @@ export default function ReadingForm({
             value={pulse}
             onChange={(e) => setPulse(e.target.value)}
             placeholder="70"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
           />
         </div>
       </div>
@@ -115,7 +120,7 @@ export default function ReadingForm({
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="e.g. after walk, morning"
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
         />
       </div>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

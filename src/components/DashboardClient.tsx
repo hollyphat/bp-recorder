@@ -62,6 +62,10 @@ export default function DashboardClient({
     fetchReadings();
   }, [fetchReadings]);
 
+  const handleReadingSaved = (reading: Reading) => {
+    setReadings((prev) => [reading, ...prev]);
+  };
+
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -89,7 +93,7 @@ export default function DashboardClient({
       </header>
 
       <main className="mx-auto max-w-3xl space-y-5 px-4 py-6 sm:px-6">
-        <ReadingForm userId={userId} onSaved={fetchReadings} />
+        <ReadingForm userId={userId} onSaved={handleReadingSaved} />
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold text-gray-700">History & trend</h2>
