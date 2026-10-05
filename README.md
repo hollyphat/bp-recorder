@@ -1,35 +1,46 @@
 # BP Recorder
 
-Simple blood pressure tracker. Google login, log systolic/diastolic/pulse readings, view history and trend charts over 7/15/30 days or a custom range.
+I built this because I was tired of jotting blood pressure readings on random pieces of paper (and then losing them). It's a small, no-frills app: log your systolic/diastolic/pulse, see the trend on a chart, and check it from your phone, laptop, wherever — as long as you're signed in with Google.
 
-## Setup
+No ads, no accounts to manage, no data going anywhere but your own database.
 
-### 1. Create a Supabase project
+## What it does
 
-1. Go to [supabase.com](https://supabase.com) and create a free project.
-2. In **SQL Editor**, run the contents of [`supabase/schema.sql`](supabase/schema.sql) to create the `readings` table and its row-level security policies.
-3. In **Authentication > Sign In / Providers**, enable **Google**.
-   - You'll need a Google OAuth Client ID/Secret from the [Google Cloud Console](https://console.cloud.google.com/apis/credentials) (OAuth consent screen + "Web application" credentials).
-   - Set the authorized redirect URI to the callback URL Supabase shows you (looks like `https://<project-ref>.supabase.co/auth/v1/callback`).
-4. In **Authentication > URL Configuration**, add your app's URL (e.g. `http://localhost:3000` for dev, and your deployed URL later) to **Site URL** and **Redirect URLs** (`.../auth/callback`).
-5. Copy your **Project URL** and **anon public key** from **Project Settings > API**.
+- Log a reading in a few taps — the date/time is stamped automatically
+- See your history as a table, with each reading flagged Normal/Elevated/Stage 1/Stage 2/Crisis (ACC/AHA guideline)
+- A trend chart over the last 7, 15, or 30 days — or pick any custom date range
+- Sign in with your Google account, nothing else to remember
 
-### 2. Configure environment variables
+## Getting it running
+
+It's a Next.js app backed by Supabase (free tier is plenty for personal use). You'll need to set up your own Supabase project since this isn't a shared service — your readings stay in your own database.
+
+### 1. Spin up a Supabase project
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor** and run [`supabase/schema.sql`](supabase/schema.sql) — this creates the `readings` table and locks it down so only you can read/write your own rows.
+3. Under **Authentication > Sign In / Providers**, turn on **Google**.
+   - You'll need an OAuth Client ID/Secret from the [Google Cloud Console](https://console.cloud.google.com/apis/credentials) — create a "Web application" credential and set its authorized redirect URI to the callback URL Supabase gives you (something like `https://<project-ref>.supabase.co/auth/v1/callback`).
+4. Under **Authentication > URL Configuration**, add your app's URL to **Site URL** and **Redirect URLs** (e.g. `http://localhost:3000` while developing, plus `.../auth/callback`).
+5. Grab your **Project URL** and **anon public key** from **Project Settings > API**.
+
+### 2. Set your environment variables
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-Fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+Paste in your `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
-### 3. Run locally
+### 3. Run it
 
 ```bash
+npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Visit [http://localhost:3000](http://localhost:3000) and sign in.
 
-## Deploying (so it's usable from anywhere)
+## Taking it with you
 
-Push this repo to GitHub and import it into [Vercel](https://vercel.com) (free tier). Add the same two environment variables in the Vercel project settings, then add your production URL to Supabase's Site URL / Redirect URLs.
+Push this to a GitHub repo and import it into [Vercel](https://vercel.com) (free tier works fine). Add the same two environment variables there, then add your Vercel URL to Supabase's Site URL / Redirect URLs so sign-in works in production too. After that it's just a URL you can open from anywhere.
