@@ -10,8 +10,4 @@ No ads, no accounts to manage, no data going anywhere but your own database.
 - See your history as a table, with each reading flagged Normal/Elevated/Stage 1/Stage 2/Crisis (ACC/AHA guideline)
 - A trend chart over the last 7, 15, or 30 days — or pick any custom date range
 - Sign in with your Google account, nothing else to remember
-
-## Getting it running
-
-It's a Next.js app backed by Supabase (free tier is plenty for personal use). You'll need to set up your own Supabase project since this isn't a shared service — your readings stay in your own database.
-
+- Installable as a PWA — add it to your phone's home screen and it opens like a native app

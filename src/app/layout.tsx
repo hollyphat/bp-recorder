@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,6 +15,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "BP Recorder",
   description: "A simple place to track your blood pressure readings over time.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "BP Recorder",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#dc2626",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
